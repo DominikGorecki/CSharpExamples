@@ -22,15 +22,52 @@ namespace TypeStudy
         public string Country { get; set; }
     }
 
-    public class Person
+    public class Person : ILocation
     {
+        string[] names;
+
         public Person(string first, string last)
         {
             FirstName = first;
             LastName = last;
+            names = FullNameProperty.Split();
         }
+
+        // Indexer for Person object 
+        public string this [int i]
+        {
+            get { return names[i];  }
+        }
+
+        // Overloading constructor
+        public Person(string first, string last, Address address) : this(first, last)
+        {
+            Address = address; 
+        }
+
+        // Expression-bodied methods
+        public string FullName() => FirstName + " " + LastName;
+
+        // Expression-bodied properties
+        public string FullNameProperty => FirstName + " " + LastName;
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public Address Address { get; set; }
+    }
+
+    public class PrivatePerson: Person
+    {
+        // Make constructor private to force construction through static method "Create"
+        PrivatePerson(string first, string last): base(first, last) { }
+        //PrivatePerson(string first, string last, Address address) : base(first, last, address) { }
+        private static int weirdPeople = 0;
+
+        public static PrivatePerson CreatePrivatePerson(string first, string last, Address address)
+        {
+            weirdPeople++;
+            return new PrivatePerson(first, last) { Address = address };
+        }
     }
 
     public abstract class Residence : ILocation

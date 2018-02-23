@@ -103,6 +103,31 @@ namespace UnitTests
             Assert.AreSame(secondHouseUpcasted, secondHouseHistorical);
         }
 
+        [TestMethod]
+        public void TestingInitializers()
+        {
+            Person person = new Person("John", "Doe")
+            {
+                Address = testAddress1
+            };
 
+            Person personTwo = new Person("John", "Doe", testAddress1);
+
+            Assert.AreEqual(person.FullName(), "John Doe");
+            Assert.AreEqual(person.FullNameProperty, "John Doe");
+            Assert.AreEqual(person.FullName(), personTwo.FullName());
+            Assert.AreEqual(person.Address, personTwo.Address);
+
+            //Testing the Indexer
+            Assert.AreEqual(person[0], "John");
+
+            //Doesn't work:
+            //PrivatePerson privatePerson = new PrivatePerson("John", "Doe");
+            //PrivatePerson privatePerson = new PrivatePerson("John", "Doe", testAddress1);
+            // Testing a static method call instance creation
+            PrivatePerson privatePerson = PrivatePerson.CreatePrivatePerson("John", "Doe", testAddress1);
+
+            Assert.AreEqual(privatePerson.FullName(), "John Doe");
+        }
     }
 }
